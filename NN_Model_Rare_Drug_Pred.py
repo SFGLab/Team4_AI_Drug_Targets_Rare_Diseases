@@ -16,7 +16,7 @@ import seaborn
 import h5py
 
 
-#### SETUP TRAINING/VALIDATION DATASETES ####################################
+#### SETUP/SPLIT TRAINING/VALIDATION DATASETS ####################################
 
 # Reading dataset
 dataset = pd.read_csv() # insert whole data table
@@ -34,11 +34,14 @@ pred_train, pred_test, targ_train, targ_test = train_test_split(predictors,targe
 
 #### MAKING THE MODEL #######################################################
 
+# Depending on size of dataset, may consider reducing nodes in layers to avoid overfitting. 
+# Original model was used for training dataset with 3049 variables.
+
 # Initialize network constructor
 model = keras.models.Sequential()
 
 # Add an input layer
-model.add(keras.layers.Dense(3050, activation='relu', input_shape=(pred_train.shape[1],)))
+model.add(keras.layers.Dense(3050, activation='relu', input_shape=(pred_train.shape[1],))) 
 
 # Add first hidden layer
 model.add(keras.layers.Dense(2000, activation='relu'))
