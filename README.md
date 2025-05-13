@@ -1,5 +1,14 @@
-# Team4_AI_Drug_Targets_Rare_Diseases
-Main project tasks:
+# Team4_AI_Drug_Targets_Rare_Diseases: RARExDrug
+
+## Team members
+David Liu, CareDx, Brisbane California, USA
+
+Federico Rossi, SOPHiA GENETICS, Rolle, Switzerland
+
+John Adedeji, Osun State University, Nigeria
+
+Mukul Sherekar, Georgetown University and x10e, Washington DC, USA
+
 ## Find a relevant rare-disease for which genetic information are available regarding the existing variants
 
 We will focus on cystic fibrosis that is common among the world populations but still considered rare.
