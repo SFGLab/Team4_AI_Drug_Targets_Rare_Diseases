@@ -55,3 +55,7 @@ We built a first prototype of a deep-learning (DL) model that is expected to tak
 The model was then compiled setting the loss to 'binary_crossentropy', the optimizer to 'adam' and requiring the 'accuracy' metrics to be computed.
 
 The performance of this basic DL architecture will be compared with the performance of models that are already available.
+
+## Flowchart of ML pipeline for Cystic Fibrosis Drug Prediction
+![Cystic Fibrosis ML Pipeline](./Cystic_Fibrosis/ProjectFlowChart/FlowChart_Hackathon_Team4.pdf)
+
