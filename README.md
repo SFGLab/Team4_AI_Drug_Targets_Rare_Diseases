@@ -57,5 +57,5 @@ The model was then compiled setting the loss to 'binary_crossentropy', the optim
 The performance of this basic DL architecture will be compared with the performance of models that are already available.
 
 ## Flowchart of ML pipeline for Cystic Fibrosis Drug Prediction
-![Cystic Fibrosis ML Pipeline](./Cystic_Fibrosis/ProjectFlowChart/FlowChart_Hackathon_Team4.pdf)
+![Cystic Fibrosis ML Pipeline](./Cystic_Fibrosis/ProjectFlowChart/FlowChart_Hackathon_Team4.png)
 
