@@ -33,7 +33,7 @@ Federico Rossi, SOPHiA GENETICS, Rolle, Switzerland
 
 John Adedeji, Osun State University, Nigeria
 
-Mukul Sherekar, Georgetown University and x10e, Washington DC, USA
+Mukul Sherekar, John Hopkins University, Baltimore, MD, USA
 
 ## 🧬 Find a relevant rare-disease for which genetic information are available regarding the existing variants
 
