@@ -20,6 +20,12 @@ This Docker image provides an environment for running protein-ligand interaction
 docker pull fedecargo/protchem:cpu
 ```
 
+## 🏗️ Run RARExDrug pipeline through Snakemake 
+Requires Singularity installed and configured
+```bash
+snakemake --use-singularity --cores 4
+```
+
 ## 👥 Team members
 David Liu, CareDx, Brisbane California, USA
 
