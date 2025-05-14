@@ -1,4 +1,6 @@
-configfile: "config.yaml"
+configfile: "config.yml"
+
+default_container: config["container"]
 
 rule all:
     input:
@@ -30,4 +32,4 @@ rule train_model:
         --ligand_embeddings {input.ligand} \
         --output_model {output.model} \
         --output_preds {output.preds}"
-
+        

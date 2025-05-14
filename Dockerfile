@@ -1,23 +1,28 @@
-# Dockerfile
-
-# Use a slim Python base image with a specific version (e.g., Python 3.10)
+# Use a base image with Python and basic tools
 FROM python:3.10-slim
 
-# Optional: Avoids interactive prompts during package install
+# Avoid interactive prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Set the working directory inside the container
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    wget \
+    curl \
+    build-essential \
+    && apt-get clean
+
+# Set working directory
 WORKDIR /app
 
-# Copy your requirements and scripts
-COPY requirements.txt .
-COPY scripts/ ./scripts/
+# Copy your project files
+COPY . /app
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Optional: install additional system dependencies (if needed)
-# RUN apt-get update && apt-get install -y libgl1
-
-# Default command (can be overridden)
-CMD ["python"]
+# Install Python packages
+RUN pip install --upgrade pip
+RUN pip install \
+    torch \
+    transformers \
+    pandas \
+    scikit-learn \
+    tqdm

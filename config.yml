@@ -1,1 +1,1 @@
-container: docker.io/your_dockerhub_user/rare-drug-pred:latest
+container: "docker://fedecargo/protchem:cpu"
