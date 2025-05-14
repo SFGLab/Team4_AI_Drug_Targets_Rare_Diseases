@@ -54,12 +54,12 @@ Drugs currently available to treat cystic fibrosis are the following:
 |                   | CFTR folding/trafficking    | Tezacaftor                      | <pre> ```CC(C)(CO)C1=CC2=CC(=C(C=C2N1C[C@H](CO)O)F)NC(=O)C3(CC3)C4=CC5=C(C=C4)OC(O5)(F)F ```</pre>          | 
 | Amplifier         | CFTR expression             | Nesolicaftor (experimental)     | <pre> ```C[C@H](C1=NN=C(O1)C2CC(C2)NC(=O)C3=CC(=NO3)C4=CC=CC=C4)O ```</pre>                                 |
 | Readthrough agent | Premature stop codons       | Ataluren                        | <pre> ```C1=CC=C(C(=C1)C2=NC(=NO2)C3=CC(=CC=C3)C(=O)O)F ```</pre>                                           |
-| Gene therapy      | CFTR gene                   | CRISPR, mRNA delivery           |  N/A                                                                                                        |
+| Gene therapy      | CFTR gene                   | CRISPR, mRNA delivery           | <pre> ```N/A ```</pre>                                                                                      |
 | ENaC inhibitors   | Sodium channel              | BI 1265162 (investigational)    | <pre> ```CCN1C2=C(C=CC(=C2)OCC(=O)NCCOCP(=O)(C)C)[N+](=C1CNC(=O)C3=NC(=CN=C3N)Cl)CC.OP(=O)(O)[O-] ```</pre> |
 | Anti-inflammatory | Neutrophilic inflammation   | Lenabasum                       | <pre> ```CCCCCCC(C)(C)C1=CC(=C2[C@@H]3CC(=CC[C@H]3C(OC2=C1)(C)C)C(=O)O)O ```</pre>                          |
 |                   | Neutrophilic inflammation   | Ibuprofen                       | <pre> ```CC(C)CC1=CC=C(C=C1)C(C)C(=O)O ```</pre>                                                            |
-| Mucolytics        | Mucus degradation/hydration | Dornase alfa                    |  N/A*                                                                                                       |
-|                   | Mucus degradation/hydration | Hypertonic saline               |  N/A                                                                                                        |
+| Mucolytics        | Mucus degradation/hydration | Dornase alfa                    | <pre> ```N/A* ```</pre>                                                                                     |
+|                   | Mucus degradation/hydration | Hypertonic saline               | <pre> ```N/A  ```</pre>                                                                                     |
 
 **N.B**: N/A- Not applicable, N/A*- Not available
 
