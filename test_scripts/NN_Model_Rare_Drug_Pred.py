@@ -1,98 +1,102 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Mon May 12 07:51:10 2025
 
-@author: dliu
-"""
+# Test script to train a simple MLP model on a dataset of protein-ligand interactions. import torch
 
-import tensorflow
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
 import pandas as pd
-import keras
-import matplotlib
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-import seaborn
-import h5py
+from transformers import BertTokenizer, BertModel, RobertaTokenizer, RobertaModel
+from torch.utils.data import Dataset, DataLoader
+import re
+from tqdm import tqdm
 
+# ========== 1. Load Pretrained Models and Tokenizers ==========
 
-#### SETUP/SPLIT TRAINING/VALIDATION DATASETS ####################################
+prot_tokenizer = BertTokenizer.from_pretrained("Rostlab/prot_bert", do_lower_case=False)
+prot_model = BertModel.from_pretrained("Rostlab/prot_bert")
+prot_model.eval()
 
-# Reading dataset
-dataset = pd.read_csv() # insert whole data table
+chem_tokenizer = RobertaTokenizer.from_pretrained("seyonec/ChemBERTa-zinc-base-v1")
+chem_model = RobertaModel.from_pretrained("seyonec/ChemBERTa-zinc-base-v1")
+chem_model.eval()
 
-# Predictor dataset
-predictors = dataset[] # data table containing the target column
-# target dataset
-targets = dataset[] # data table containing the target column
+# ========== 2. MLP Class ==========
 
-# Split predictors and targets into training and testing datasets
-pred_train, pred_test, targ_train, targ_test = train_test_split(predictors,targets,test_size= 0.2,random_state=0)
+class ProteinLigandNN(nn.Module):
+    def __init__(self):
+        super(ProteinLigandNN, self).__init__()
+        self.fc1 = nn.Linear(1024 + 768, 1024)
+        self.fc2 = nn.Linear(1024, 512)
+        self.fc3 = nn.Linear(512, 256)
+        self.out = nn.Linear(256, 1)
 
+    def forward(self, prot_embed, chem_embed):
+        x = torch.cat([prot_embed, chem_embed], dim=1)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = F.relu(self.fc3(x))
+        return torch.sigmoid(self.out(x))
 
+# ========== 3. Data Handling ==========
 
+class ProteinLigandDataset(Dataset):
+    def __init__(self, csv_path):
+        df = pd.read_csv(csv_path).dropna(subset=["SMILES", "Protein", "binding"])
+        self.samples = df[["SMILES", "Protein", "binding"]].reset_index(drop=True)
 
-#### MAKING THE MODEL #######################################################
+    def __len__(self):
+        return len(self.samples)
 
-# Depending on size of dataset, may consider reducing nodes in layers to avoid overfitting. 
-# Original model was used for training dataset with 3049 variables.
+    def __getitem__(self, idx):
+        smiles = self.samples.loc[idx, "SMILES"]
+        prot_seq = re.sub(r"[UZOB]", "X", self.samples.loc[idx, "Protein"])
+        label = float(self.samples.loc[idx, "binding"])
+        
+        # Chem embedding
+        chem_tokens = chem_tokenizer(smiles, return_tensors='pt', padding=True, truncation=True)
+        with torch.no_grad():
+            chem_embed = chem_model(**chem_tokens).last_hidden_state.mean(dim=1).squeeze(0)
 
-# Initialize network constructor
-model = keras.models.Sequential()
+        # Protein embedding
+        prot_tokens = prot_tokenizer(prot_seq, return_tensors='pt', padding=True, truncation=True)
+        with torch.no_grad():
+            prot_embed = prot_model(**prot_tokens).last_hidden_state.mean(dim=1).squeeze(0)
 
-# Add an input layer
-model.add(keras.layers.Dense(3050, activation='relu', input_shape=(pred_train.shape[1],))) 
+        return prot_embed, chem_embed, torch.tensor([label], dtype=torch.float32)
 
-# Add first hidden layer
-model.add(keras.layers.Dense(2000, activation='relu'))
+# ========== 4. Training Loop ==========
 
-# Add second hidden layer
-model.add(keras.layers.Dense(2000, activation='relu'))
+def train():
+    Nepochs = 11
+    dataset = ProteinLigandDataset("/Users/dliu/Desktop/test_folders/workdir/Team4/BindingDB_ChEMBL_LiganSmile_ProteinSeq_750k_Binding_noBinding_7k_Train.csv")
+    loader = DataLoader(dataset, batch_size=100, shuffle=True)
 
-# Add output layer
-model.add(keras.layers.Dense(1,activation='sigmoid'))
+    model = ProteinLigandNN()
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
+    loss_fn = nn.BCELoss()
 
-# Model specs and features
-print(model.summary())
-print(model.get_config())
-print(model.get_weights())
+    model.train()
+    for epoch in range(Nepochs):
+        total_loss = 0
+        for prot_embed, chem_embed, labels in tqdm(loader, desc=f"Epoch {epoch+1}"):
+            preds = model(prot_embed, chem_embed)
+            loss = loss_fn(preds, labels)
 
-# Compile model
-model.compile(loss='binary_crossentropy',
-              optimizer='adam',
-              metrics=['accuracy'])
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item()
 
-n = 145                 
-model.fit(pred_train, targ_train,epochs=n, batch_size=10, verbose=1)
-
-model.save('RARExDrug.h5')
-
-
-
-#### ASSESS MODEL PERFORMANCE  ##############################################
-
-# Predict scores
-predictions = model.predict(pred_test)
-
-score = model.evaluate(pred_test,targ_test,verbose=1)
-
-# Confusion matrix
-print('Confusion matrix:\n')
-print(sklearn.metrics.confusion_matrix(targ_test, predictions))
-       
-# Precision 
-print('Precision')
-print(sklearn.metrics.precision_score(targ_test, predictions))
-
-# Recall
-print('Recall')
-print(sklearn.metrics.recall_score(targ_test, predictions))
-
-# F1 score
-print('F1 score')
-print(sklearn.metrics.f1_score(targ_test,predictions))
-
-# Cohen's kappa
-print("Cohen's kappa")
-print(sklearn.metrics.cohen_kappa_score(targ_test, predictions))
-
+        print(f"Epoch {epoch+1} Loss: {total_loss:.4f}")
+    
+    torch.save(model, "RARExDrug_NN.pth")
+    
+if __name__ == "__main__":
+    train()
+    
+    
+    
+    
+    
