@@ -57,7 +57,6 @@ Drugs currently available to treat cystic fibrosis are the following:
 | Potentiator       | CFTR gating                 | Ivacaftor                       | <pre> ```CC(C)(C)C1=CC(=C(C=C1NC(=O)C2=CNC3=CC=CC=C3C2=O)O)C(C)(C)C ```</pre>                               |
 | Corrector         | CFTR folding/trafficking    | Lumacaftor                      | <pre> ```CC1=C(N=C(C=C1)NC(=O)C2(CC2)C3=CC4=C(C=C3)OC(O4)(F)F)C5=CC(=CC=C5)C(=O)O ```</pre>                 |
 |                   | CFTR folding/trafficking    | Tezacaftor                      | <pre> ```CC(C)(CO)C1=CC2=CC(=C(C=C2N1C[C@H](CO)O)F)NC(=O)C3(CC3)C4=CC5=C(C=C4)OC(O5)(F)F ```</pre>          |
-|                   | CFTR folding/trafficking    | Tezacaftor                      | <pre> ```CC(C)(CO)C1=CC2=CC(=C(C=C2N1C[C@H](CO)O)F)NC(=O)C3(CC3)C4=CC5=C(C=C4)OC(O5)(F)F ```</pre>          | 
 | Amplifier         | CFTR expression             | Nesolicaftor (experimental)     | <pre> ```C[C@H](C1=NN=C(O1)C2CC(C2)NC(=O)C3=CC(=NO3)C4=CC=CC=C4)O ```</pre>                                 |
 | Readthrough agent | Premature stop codons       | Ataluren                        | <pre> ```C1=CC=C(C(=C1)C2=NC(=NO2)C3=CC(=CC=C3)C(=O)O)F ```</pre>                                           |
 | Gene therapy      | CFTR gene                   | CRISPR, mRNA delivery           | <pre> ```N/A ```</pre>                                                                                      |
