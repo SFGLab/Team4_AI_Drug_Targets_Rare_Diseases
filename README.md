@@ -46,16 +46,21 @@ Drug treatment of cystic fibrosis mainly targets the CFTR gene (Cystic Fibrosis 
 
 Drugs currently available to treat cystic fibrosis are the following:
 
-| **Drug Class**    | **Target**                  | **Example**                     |
-| ----------------- | --------------------------- | ------------------------------- |
-| Potentiator       | CFTR gating                 | Ivacaftor                       |
-| Corrector         | CFTR folding/trafficking    | Lumacaftor, Tezacaftor          |
-| Amplifier         | CFTR expression             | Nesolicaftor (experimental)     |
-| Readthrough agent | Premature stop codons       | Ataluren                        |
-| Gene therapy      | CFTR gene                   | CRISPR, mRNA delivery           |
-| ENaC inhibitors   | Sodium channel              | BI 1265162 (investigational)    |
-| Anti-inflammatory | Neutrophilic inflammation   | Lenabasum, ibuprofen            |
-| Mucolytics        | Mucus degradation/hydration | Dornase alfa, hypertonic saline |
+| **Drug Class**    | **Target**                  | **Example**                     | **SMILES Structure**                                                                      |
+| ----------------- | --------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------- |
+| Potentiator       | CFTR gating                 | Ivacaftor                       | CC(C)(C)C1=CC(=C(C=C1NC(=O)C2=CNC3=CC=CC=C3C2=O)O)C(C)(C)C                                |
+| Corrector         | CFTR folding/trafficking    | Lumacaftor                      | CC1=C(N=C(C=C1)NC(=O)C2(CC2)C3=CC4=C(C=C3)OC(O4)(F)F)C5=CC(=CC=C5)C(=O)O                  |
+|                   | CFTR folding/trafficking    | Tezacaftor                      | CC(C)(CO)C1=CC2=CC(=C(C=C2N1C[C@H](CO)O)F)NC(=O)C3(CC3)C4=CC5=C(C=C4)OC(O5)(F)F           |
+| Amplifier         | CFTR expression             | Nesolicaftor (experimental)     | C[C@H](C1=NN=C(O1)C2CC(C2)NC(=O)C3=CC(=NO3)C4=CC=CC=C4)O                                  |
+| Readthrough agent | Premature stop codons       | Ataluren                        | C1=CC=C(C(=C1)C2=NC(=NO2)C3=CC(=CC=C3)C(=O)O)F                                            |
+| Gene therapy      | CFTR gene                   | CRISPR, mRNA delivery           | N/A                                                                                       |
+| ENaC inhibitors   | Sodium channel              | BI 1265162 (investigational)    | CCN1C2=C(C=CC(=C2)OCC(=O)NCCOCP(=O)(C)C)[N+](=C1CNC(=O)C3=NC(=CN=C3N)Cl)CC.OP(=O)(O)[O-]  |
+| Anti-inflammatory | Neutrophilic inflammation   | Lenabasum                       | CCCCCCC(C)(C)C1=CC(=C2[C@@H]3CC(=CC[C@H]3C(OC2=C1)(C)C)C(=O)O)O                           |
+|                   | Neutrophilic inflammation   | Ibuprofen                       | CC(C)CC1=CC=C(C=C1)C(C)C(=O)O                                                             |
+| Mucolytics        | Mucus degradation/hydration | Dornase alfa                    | N/A*                                                                                      |
+|                   | Mucus degradation/hydration | Hypertonic saline               | N/A                                                                                       |
+
+**N.B**: N/A- Not applicable, N/A*- Not available
 
 We obtained the chemical structure of Ivacaftor and we plan to obtain the same information for others drugs that targets cystic fibrosis with the aim of comparing the structure of the drugs currently used to treat cystic fibrosis with the ligand that will be identified through our machine learning model.
 
