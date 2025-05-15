@@ -35,7 +35,9 @@ John Adedeji, Osun State University, Nigeria
 
 Mukul Sherekar, John Hopkins University, Baltimore, MD, USA
 
-## 🧬 Find a relevant rare-disease for which genetic information are available regarding the existing variants
+## 🧪 Methods
+
+### 🧬 Find a relevant rare-disease for which genetic information are available regarding the existing variants
 
 We will focus on cystic fibrosis that is common among the world populations but still considered rare.
 Drug treatment of cystic fibrosis mainly targets the CFTR gene (Cystic Fibrosis Transmembrane Conductance Regulator). Drugs aim to correct the expression expression or function of the defective CFTR protein. The relevance of CFTR for th treatment of cystic fibrosis is also remarked by the number of pathogenic or likely-pathogenic variants hosted on Clinvar (https://www.ncbi.nlm.nih.gov/clinvar) that are linked to this gene. Based on Clinvar, CFTR presents 1102 Pathogenic/Likely-pathogenic variants. These 1102 variants include the following main variant types:
@@ -70,7 +72,7 @@ Drugs currently available to treat cystic fibrosis are the following:
 
 We obtained the chemical structure of Ivacaftor and we plan to obtain the same information for others drugs that targets cystic fibrosis with the aim of comparing the structure of the drugs currently used to treat cystic fibrosis with the ligand that will be identified through our machine learning model.
 
-## 💾 Select a database of protein-ligand interactions to be used as input for the training of the ML model
+### 💾 Select a database of protein-ligand interactions to be used as input for the training of the ML model
 We selected BindingDB as the database of protein-ligand interactions to be used as input for the training of the ML model (https://www.bindingdb.org/rwd/bind/chemsearch/marvin/Download.jsp). 
 BindingDB was selected because:
 
@@ -81,20 +83,45 @@ BindingDB was selected because:
 
 BindingDB contains examples in which a ligand binds a protein. However, the training of an ML model also requires "negative" examples of interactions where a ligand is not expected to bind the protein. To generate pairs of proteins and ligands expected to not interact, we replaced the 30% of the aminoacid of the protein sequence with some other aminoacid thus leading to a protein that is likely to lack the structural properties that would allow the establishment of a protein-ligand interaction.
    
-## 🔗 Find a tool to generate embeddings from the protein sequences
+### 🔗 Find a tool to generate embeddings from the protein sequences
 SMILE representation of ligands and protein sequences cannot be used as input for the training of the ML model as they are, but instead need to be converted into embeddings which are "low-dimensional, learned vector representations of high-dimensional or complex data, where similar inputs are mapped to nearby points in the vector space". To convert SMILE and aminoacid sequences into embeddings, we first considered the tool ProteinBERT (https://github.com/nadavbra/protein_bert). ProteinBERT is able to convert protein SMILE representations into amino acid sequences and we further integrated them with ChemBERTa to effectively encode chemical structures from SMILES representations. This allows the model to be applicable across diverse datasets by relying on amino acid sequences rather than PDB structures. 
 
-## 🤖 Build a first-prototype of the deep learning model using a basic architecture
-We built a first prototype of a deep-learning (DL) model that is expected to take the BindingDB dataset as an input and to be used to predict the interaction between known biomarkers of cystic fibrosis and ligands (drugs) that are available in BindingDB. We first considered a simple DL architecture built through the keras Sequential() API as follows:
+### 🤖 Build a first-prototype of the deep learning model using a basic architecture
+We built a first prototype of a deep-learning (DL) model that is expected to take the BindingDB dataset as an input and to be used to predict the interaction between known biomarkers of cystic fibrosis and ligands (drugs) that are available in BindingDB. We first considered a simple DL architecture that includes and input layer, two hiddens layers and an output layer. The model was then compiled setting the loss to 'binary_crossentropy', the optimizer to 'adam' and requiring the 'accuracy' metrics to be computed. The performance of this basic DL architecture will be compared with the performance of models that are already available.
 
-1. input layer with 3050 nodes and relu activation function
-2. first hidden layer with 2000 nodes and relu activation function
-3. second hidden layer with 2000 nodes and relu activation function
-4. output layer with a single node (1/0 prediction of the model) and sigmoid activation function.
+## 📊 Results
 
-The model was then compiled setting the loss to 'binary_crossentropy', the optimizer to 'adam' and requiring the 'accuracy' metrics to be computed.
+### 🧾 Model performance
 
-The performance of this basic DL architecture will be compared with the performance of models that are already available.
+RareXDrug is trained on 7,000 samples extracted from the BindingDB ChEMBL database including 4683 positive binding events and 2317 negative binding events. The evaluation of the performance of the model reported the following metrics:
+
+| **Metric**    | **Value**              |
+| --------------| ---------------------- |
+| True Positive  | 1919            |
+| True Negative  | 9               |
+| False Positive | 1061            |
+| False Negative | 11              |
+| AUC-ROC score  | 0.49            |
+| Accuracy       | 0.64            |
+| Binary cross entropy loss | 0.66 |
+
+The poor performance of the model was likely affected by the low number of samples (7,000) and training epochs (11). Such a low number of samples, 7,000 out of the 750,000 available in the initial dataset from BindingDB, was due to the limited computational capacity available to perform the training of the deep learning model. We plan to expand the dataset used for the training of the deep learning model and to increase the epochs included in the training to improve the performance of the model.
+
+### ⚙️ Making RareXDrug available to external users
+Users can access the RareXDrug model for the prediction of binding between a custom set of proteins and ligands. Moreover, the training and evaluation scripts of RareXDrug are provided as a Snakemake pipeline linked to a docker container to allow the re-training of deep learning models with custom datasets.
+
+## Conclusions
+Deep learning models are a promising tool for the prediction of protein-ligand (drug) interactions and can thus be used to identify the ligand that can bind proteins implied in disease mechanism and modulate their activity. Here, we built a pipeline for the generation of protein and ligand embeddings then used for the training of a deep learning models aiming to predict the likelihood 
+
+## 📝 Future work
+
+1. Evaluate the model's performance on more advanced computational architectures, including graph neural networks (GNNs)
+2. Evalute the model's performance on an increased number of samples
+3. Extend the training across a longer number of epochs
+4. Integrating multi-omics data to provide information on broader biological contexts
+5. Partnering with clinical researchers will ensure real-world clinical validation of potential drug candidates.
+6. Predict the ligands able to bind to proteins classified as biomarkers for Cystic Fibrosis. Protein sequences will be edited to take into account the mutations that most frequently occur in Cystic Fibrosis.
+7. Deploy an interactive web-based interface to offer non-technical researchers and clinicians a rare disease drug repurposing platform.
 
 ## Flowchart of ML pipeline for Cystic Fibrosis Drug Prediction
 ![Cystic Fibrosis ML Pipeline](./Cystic_Fibrosis/ProjectFlowChart/FlowChart_Hackathon_Team4.png)
