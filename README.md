@@ -124,6 +124,22 @@ Deep learning models are a promising tool for the prediction of protein-ligand (
 7. Deploy an interactive web-based interface to offer non-technical researchers and clinicians a rare disease drug repurposing platform.
 
 ## 📚 References
+
+ClinVar
+```bibtext
+@article{landrum2016clinvar,
+  title={ClinVar: public archive of interpretations of clinically relevant variants},
+  author={Landrum, Melissa J and Lee, Jennifer M and Benson, Mark and Brown, Garth R and Chao, Christine and Chitipiralla, Shanmuga and Gu, Baoshan and Hart, Jennifer and Hoffman, David and Hoover, Jeff and Jang, Won and Katz, Kathi and Ovetsky, Michael and Riley, Greg and Sethi, Amar and Tully, Rachel E and Villamarin-Salomon, Ricardo and Rubinstein, Wendy S and Maglott, Donna R},
+  journal={Nucleic Acids Research},
+  volume={44},
+  number={D1},
+  pages={D862--D868},
+  year={2016},
+  publisher={Oxford University Press},
+  doi={10.1093/nar/gkv1222}
+}
+```
+
 Docker
 ```bibtext
 @article{merkel2014docker,
