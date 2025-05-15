@@ -110,7 +110,7 @@ The poor performance of the model was likely affected by the low number of sampl
 ### ⚙️ Making RareXDrug available to external users
 Users can access the RareXDrug model for the prediction of binding between a custom set of proteins and ligands. Moreover, the training and evaluation scripts of RareXDrug are provided as a Snakemake pipeline linked to a docker container to allow the re-training of deep learning models with custom datasets.
 
-## Conclusions
+## 🎯 Conclusions
 Deep learning models are a promising tool for the prediction of protein-ligand (drug) interactions and can thus be used to identify the ligand that can bind proteins implied in disease mechanism and modulate their activity. Here, we built a pipeline for the generation of protein and ligand embeddings then used for the training of a deep learning models aiming to predict the likelihood of interaction between proteins implied in cystic fibrosis and ligand candidates. We successfully generated the protein and ligand embeddings from a dataset of 7,000 samples extracted from the BindingDB ChEMBL database and we used those embeddings for the training of a deep learning model. We obtained a poor model performance in terms of accuracy, AUC-ROC score and binary cross entropy loss, probably due to the limited size of the training dataset and the low number of training epochs. Size of training dataset and number of training epochs were limited by the computational resources available at the time of training. We plan to expand the computational capacity of the training process by accessing GPU resources.
 
 ## 📝 Future work
@@ -122,6 +122,46 @@ Deep learning models are a promising tool for the prediction of protein-ligand (
 5. Partnering with clinical researchers will ensure real-world clinical validation of potential drug candidates.
 6. Predict the ligands able to bind to proteins classified as biomarkers for Cystic Fibrosis. Protein sequences will be edited to take into account the mutations that most frequently occur in Cystic Fibrosis.
 7. Deploy an interactive web-based interface to offer non-technical researchers and clinicians a rare disease drug repurposing platform.
+
+## 📚 References
+Docker
+@article{merkel2014docker,
+  title={Docker: lightweight linux containers for consistent development and deployment},
+  author={Merkel, Dirk},
+  journal={Linux Journal},
+  volume={2014},
+  number={239},
+  pages={2},
+  year={2014}
+}
+
+ProtBert
+@article{elnaggar2021prottrans,
+  title={ProtTrans: Towards Cracking the Language of Life's Code Through Self-Supervised Deep Learning and High Performance Computing},
+  author={Elnaggar, Ahmed and Heinzinger, Michael and Dallago, Christian and Rehawi, Ghalia and Wang, Yu and Jones, Llion and Gibbs, Tom and Feher, Tamas and Angerer, Christoph and Steinegger, Martin and Bhowmik, Debsindhu and Rost, Burkhard},
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume={44},
+  number={10},
+  pages={7112--7127},
+  year={2022},
+  publisher={IEEE}
+}
+
+ChemBert
+@article{chithrananda2020chemberta,
+  title={ChemBERTa: Large-Scale Self-Supervised Pretraining for Molecular Property Prediction},
+  author={Chithrananda, Soham and Grand, Gabriel and Ramsundar, Bharath},
+  journal={arXiv preprint arXiv:2010.09885},
+  year={2020}
+}
+
+Pytorch
+@article{paszke2019pytorch,
+  title={PyTorch: An Imperative Style, High-Performance Deep Learning Library},
+  author={Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and Desmaison, Alban and Kopf, Andreas and Yang, Edward and DeVito, Zachary and Raison, Martin and Tejani, Alykhan and Chilamkurthy, Sasank and Steiner, Benoit and Fang, Lu and Bai, Junjie and Chintala, Soumith},
+  journal={arXiv preprint arXiv:1912.01703},
+  year={2019}
+}
 
 ## Flowchart of ML pipeline for Cystic Fibrosis Drug Prediction
 ![Cystic Fibrosis ML Pipeline](./Cystic_Fibrosis/ProjectFlowChart/FlowChart_Hackathon_Team4.png)
