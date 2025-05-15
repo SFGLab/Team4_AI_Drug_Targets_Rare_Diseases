@@ -125,6 +125,7 @@ Deep learning models are a promising tool for the prediction of protein-ligand (
 
 ## 📚 References
 Docker
+```bibtext
 @article{merkel2014docker,
   title={Docker: lightweight linux containers for consistent development and deployment},
   author={Merkel, Dirk},
@@ -134,8 +135,10 @@ Docker
   pages={2},
   year={2014}
 }
+```
 
 ProtBert
+```bibtext
 @article{elnaggar2021prottrans,
   title={ProtTrans: Towards Cracking the Language of Life's Code Through Self-Supervised Deep Learning and High Performance Computing},
   author={Elnaggar, Ahmed and Heinzinger, Michael and Dallago, Christian and Rehawi, Ghalia and Wang, Yu and Jones, Llion and Gibbs, Tom and Feher, Tamas and Angerer, Christoph and Steinegger, Martin and Bhowmik, Debsindhu and Rost, Burkhard},
@@ -146,22 +149,27 @@ ProtBert
   year={2022},
   publisher={IEEE}
 }
+```
 
 ChemBert
+```bibtext
 @article{chithrananda2020chemberta,
   title={ChemBERTa: Large-Scale Self-Supervised Pretraining for Molecular Property Prediction},
   author={Chithrananda, Soham and Grand, Gabriel and Ramsundar, Bharath},
   journal={arXiv preprint arXiv:2010.09885},
   year={2020}
 }
+```
 
 Pytorch
+```bibtext
 @article{paszke2019pytorch,
   title={PyTorch: An Imperative Style, High-Performance Deep Learning Library},
   author={Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and Desmaison, Alban and Kopf, Andreas and Yang, Edward and DeVito, Zachary and Raison, Martin and Tejani, Alykhan and Chilamkurthy, Sasank and Steiner, Benoit and Fang, Lu and Bai, Junjie and Chintala, Soumith},
   journal={arXiv preprint arXiv:1912.01703},
   year={2019}
 }
+```
 
 ## Flowchart of ML pipeline for Cystic Fibrosis Drug Prediction
 ![Cystic Fibrosis ML Pipeline](./Cystic_Fibrosis/ProjectFlowChart/FlowChart_Hackathon_Team4.png)
