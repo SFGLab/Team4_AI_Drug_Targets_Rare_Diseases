@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 import warnings
 warnings.filterwarnings('ignore')
+from transformers import BertModel, BertTokenizer
 
 # Set random seeds for reproducibility
 torch.manual_seed(42)
@@ -33,7 +34,9 @@ image = (
         "pandas",
         "numpy",
         "scikit-learn",
-        "matplotlib"
+        "matplotlib",
+        "transformers",
+        "sentencepiece"
     )
     .apt_install("git")
 )
@@ -44,17 +47,12 @@ volume = modal.Volume.from_name("my-hackathon-data", create_if_missing=False)
 output_volume = modal.Volume.from_name("my-hackathon-outputs", create_if_missing=True)
 
 class LigandProteinDataset(Dataset):
-    """Dataset class for ligand-protein interaction data"""
-    def __init__(self, smiles_list, protein_list, labels, max_protein_len=1000):
+    """Dataset class for ligand-protein interaction data using precomputed ProtBert embeddings"""
+    def __init__(self, smiles_list, protein_list, labels, embedding_path="/data/protein_embeddings.npy"):
         self.smiles_list = smiles_list
         self.protein_list = protein_list
         self.labels = labels
-        self.max_protein_len = max_protein_len
-        self.aa_vocab = {
-            'A': 1, 'R': 2, 'N': 3, 'D': 4, 'C': 5, 'E': 6, 'Q': 7, 'G': 8,
-            'H': 9, 'I': 10, 'L': 11, 'K': 12, 'M': 13, 'F': 14, 'P': 15,
-            'S': 16, 'T': 17, 'W': 18, 'Y': 19, 'V': 20, 'X': 21
-        }
+        self.embeddings = np.load(embedding_path, allow_pickle=True).item()
         self.mol_features = []
         self.protein_features = []
         self.valid_indices = []
@@ -95,14 +93,11 @@ class LigandProteinDataset(Dataset):
             print(f"Error processing SMILES '{smiles}': {e}")
             return None
     def _protein_to_features(self, protein_seq):
-        try:
-            indices = [self.aa_vocab.get(aa, self.aa_vocab['X']) for aa in protein_seq]
-            if len(indices) > self.max_protein_len:
-                indices = indices[:self.max_protein_len]
-            else:
-                indices.extend([0] * (self.max_protein_len - len(indices)))
-            return torch.tensor(indices, dtype=torch.long)
-        except:
+        # Use precomputed embedding
+        if protein_seq in self.embeddings:
+            return torch.tensor(self.embeddings[protein_seq], dtype=torch.float32)
+        else:
+            print(f"Protein sequence not found in embeddings: {protein_seq[:30]}...")
             return None
     def __len__(self):
         return len(self.valid_indices)
@@ -115,8 +110,7 @@ class LigandProteinDataset(Dataset):
 
 class BaselineModel(nn.Module):
     """Baseline model using simple neural networks"""
-    def __init__(self, mol_feature_dim=15, protein_vocab_size=22, protein_embed_dim=128, 
-                 protein_max_len=1000, hidden_dim=512, dropout=0.5):
+    def __init__(self, mol_feature_dim=15, protein_embed_dim=1024, hidden_dim=512, dropout=0.5):
         super(BaselineModel, self).__init__()
         self.mol_processor = nn.Sequential(
             nn.Linear(mol_feature_dim, 256),
@@ -126,10 +120,9 @@ class BaselineModel(nn.Module):
             nn.ReLU(),
             nn.Dropout(dropout)
         )
-        self.protein_embedding = nn.Embedding(protein_vocab_size, protein_embed_dim, padding_idx=0)
-        self.protein_lstm = nn.LSTM(protein_embed_dim, 256, batch_first=True, bidirectional=True)
+        # No embedding or LSTM for protein, just a linear layer
         self.protein_processor = nn.Sequential(
-            nn.Linear(512, 256),
+            nn.Linear(protein_embed_dim, 256),
             nn.ReLU(),
             nn.Dropout(dropout),
             nn.Linear(256, 128),
@@ -148,10 +141,7 @@ class BaselineModel(nn.Module):
         )
     def forward(self, mol_features, protein_features):
         mol_repr = self.mol_processor(mol_features)
-        protein_embedded = self.protein_embedding(protein_features)
-        protein_lstm_out, _ = self.protein_lstm(protein_embedded)
-        protein_repr = torch.mean(protein_lstm_out, dim=1)
-        protein_repr = self.protein_processor(protein_repr)
+        protein_repr = self.protein_processor(protein_features)
         combined = torch.cat([mol_repr, protein_repr], dim=1)
         output = self.fusion(combined)
         return output.squeeze()
@@ -320,9 +310,7 @@ def modal_main(dataset_path=None, load_previous_model=False):
     print("=== Training Baseline Model ===")
     baseline_model = BaselineModel(
         mol_feature_dim=15,
-        protein_vocab_size=22,
-        protein_embed_dim=128,
-        protein_max_len=1000,
+        protein_embed_dim=1024,  # ProtBert embedding size
         hidden_dim=512,
         dropout=0.5
     )
