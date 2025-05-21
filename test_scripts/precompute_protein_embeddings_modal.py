@@ -18,12 +18,12 @@ image = (
 )
 
 # Modal volume for input/output
-volume = modal.Volume.from_name("my-hackathon-data", create_if_missing=False)
-
+input_volume = modal.Volume.from_name("my-hackathon-data", create_if_missing=False)
+output_volume = modal.Volume.from_name("my-hackathon-outputs", create_if_missing=True)
 app = modal.App("precompute-protein-embeddings")
 
-@app.function(image=image, volumes={"/data": volume}, timeout=3600, gpu="A10G")
-def precompute_embeddings_modal(input_dataset: str, output_path="/data/protein_embeddings.npy", batch_size=8):
+@app.function(image=image, volumes={"/data": input_volume, "/outputs": output_volume}, timeout=3600, gpu="A10G")
+def precompute_embeddings_modal(input_dataset: str, output_path: str, batch_size=8):
     print(f"Loading CSV from {input_dataset}")
     df = pd.read_csv(input_dataset)
     unique_proteins = df['Protein'].unique()
@@ -67,7 +67,7 @@ def precompute_embeddings_modal(input_dataset: str, output_path="/data/protein_e
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Precompute protein embeddings with ProtBert")
     parser.add_argument('--input_dataset', type=str, required=True, help='Path to input CSV file')
-    parser.add_argument('--output_path', type=str, default="protein_embeddings.npy", help='Path to output .npy file')
+    parser.add_argument('--output_path', type=str, required=True, help='Path to output .npy file')
     parser.add_argument('--batch_size', type=int, default=8, help='Batch size for embedding generation')
     args = parser.parse_args()
     print(f"Running locally with input CSV: {args.input_dataset}")
