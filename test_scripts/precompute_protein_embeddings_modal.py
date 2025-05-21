@@ -3,6 +3,7 @@ import pandas as pd
 import torch
 import numpy as np
 from transformers import BertModel, BertTokenizer
+import argparse
 
 # Modal image with transformers and sentencepiece
 image = (
@@ -22,9 +23,9 @@ volume = modal.Volume.from_name("my-hackathon-data", create_if_missing=False)
 app = modal.App("precompute-protein-embeddings")
 
 @app.function(image=image, volumes={"/data": volume}, timeout=3600, gpu="A10G")
-def precompute_embeddings_modal(csv_path="/data/BindingDB_ChEMBL_LiganSmile_ProteinSeq_750k_Binding_noBinding_7k_Train.csv", output_path="/data/protein_embeddings.npy", batch_size=8):
-    print(f"Loading CSV from {csv_path}")
-    df = pd.read_csv(csv_path)
+def precompute_embeddings_modal(input_dataset: str, output_path="/data/protein_embeddings.npy", batch_size=8):
+    print(f"Loading CSV from {input_dataset}")
+    df = pd.read_csv(input_dataset)
     unique_proteins = df['Protein'].unique()
     print(f"Found {len(unique_proteins)} unique protein sequences.")
 
@@ -64,5 +65,10 @@ def precompute_embeddings_modal(csv_path="/data/BindingDB_ChEMBL_LiganSmile_Prot
     print(f"Saved protein embeddings to {output_path}")
 
 if __name__ == "__main__":
-    # For local test, you could call precompute_embeddings_modal.remote() with args
-    pass 
+    parser = argparse.ArgumentParser(description="Precompute protein embeddings with ProtBert")
+    parser.add_argument('--input_dataset', type=str, required=True, help='Path to input CSV file')
+    parser.add_argument('--output_path', type=str, default="protein_embeddings.npy", help='Path to output .npy file')
+    parser.add_argument('--batch_size', type=int, default=8, help='Batch size for embedding generation')
+    args = parser.parse_args()
+    print(f"Running locally with input CSV: {args.input_dataset}")
+    precompute_embeddings_modal(args.input_dataset, args.output_path, args.batch_size)
