@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ligand-Protein Interaction Web App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="file"], input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ligand-Protein Interaction Web App</h1>
+    
+    <div class="section">
+        <h2>Upload Files</h2>
+        <div class="form-group">
+            <label for="file">Select File:</label>
+            <input type="file" id="file" name="file">
+            <button onclick="uploadFile()">Upload</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Train Model</h2>
+        <div class="form-group">
+            <label for="trainDataset">Dataset File:</label>
+            <input type="text" id="trainDataset" placeholder="dataset.csv">
+            <label for="trainProteinEmbeddings">Protein Embeddings:</label>
+            <input type="text" id="trainProteinEmbeddings" placeholder="protein_embeddings.npy">
+            <label for="trainLigandEmbeddings">Ligand Embeddings:</label>
+            <input type="text" id="trainLigandEmbeddings" placeholder="ligand_embeddings.npy">
+            <button onclick="trainModel()">Train</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Make Predictions</h2>
+        <div class="form-group">
+            <label for="predictInput">Input File:</label>
+            <input type="text" id="predictInput" placeholder="input.csv">
+            <label for="predictModel">Model File:</label>
+            <input type="text" id="predictModel" placeholder="model.pth">
+            <label for="predictProteinEmbeddings">Protein Embeddings:</label>
+            <input type="text" id="predictProteinEmbeddings" placeholder="protein_embeddings.npy">
+            <label for="predictLigandEmbeddings">Ligand Embeddings:</label>
+            <input type="text" id="predictLigandEmbeddings" placeholder="ligand_embeddings.npy">
+            <button onclick="makePredictions()">Predict</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Available Files</h2>
+        <button onclick="listFiles()">Refresh File List</button>
+        <div id="fileList"></div>
+    </div>
+
+    <div id="status"></div>
+
+    <script>
+        function showStatus(message, isError = false) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = isError ? 'error' : 'success';
+        }
+
+        async function uploadFile() {
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+            if (!file) {
+                showStatus('Please select a file to upload', true);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                showStatus(result.status === 'success' ? 
+                    'File uploaded successfully' : 
+                    'Error uploading file: ' + result.message,
+                    result.status !== 'success'
+                );
+                listFiles();
+            } catch (error) {
+                showStatus('Error uploading file: ' + error, true);
+            }
+        }
+
+        async function trainModel() {
+            const dataset = document.getElementById('trainDataset').value;
+            const proteinEmbeddings = document.getElementById('trainProteinEmbeddings').value;
+            const ligandEmbeddings = document.getElementById('trainLigandEmbeddings').value;
+
+            if (!dataset || !proteinEmbeddings || !ligandEmbeddings) {
+                showStatus('Please fill in all fields', true);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('dataset_file', dataset);
+            formData.append('protein_embeddings', proteinEmbeddings);
+            formData.append('ligand_embeddings', ligandEmbeddings);
+
+            try {
+                const response = await fetch('/train', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                showStatus(result.status === 'success' ? 
+                    'Training started successfully' : 
+                    'Error starting training: ' + result.message,
+                    result.status !== 'success'
+                );
+            } catch (error) {
+                showStatus('Error starting training: ' + error, true);
+            }
+        }
+
+        async function makePredictions() {
+            const inputFile = document.getElementById('predictInput').value;
+            const modelFile = document.getElementById('predictModel').value;
+            const proteinEmbeddings = document.getElementById('predictProteinEmbeddings').value;
+            const ligandEmbeddings = document.getElementById('predictLigandEmbeddings').value;
+
+            if (!inputFile || !modelFile || !proteinEmbeddings || !ligandEmbeddings) {
+                showStatus('Please fill in all fields', true);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('input_file', inputFile);
+            formData.append('model_file', modelFile);
+            formData.append('protein_embeddings', proteinEmbeddings);
+            formData.append('ligand_embeddings', ligandEmbeddings);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    showStatus('Predictions completed successfully');
+                    window.location.href = `/download/${result.output_file}`;
+                } else {
+                    showStatus('Error making predictions: ' + result.message, true);
+                }
+            } catch (error) {
+                showStatus('Error making predictions: ' + error, true);
+            }
+        }
+
+        async function listFiles() {
+            try {
+                const response = await fetch('/files');
+                const result = await response.json();
+                if (result.status === 'success') {
+                    const fileList = document.getElementById('fileList');
+                    fileList.innerHTML = `
+                        <h3>Data Files:</h3>
+                        <ul>${result.data_files.map(f => `<li>${f}</li>`).join('')}</ul>
+                        <h3>Output Files:</h3>
+                        <ul>${result.output_files.map(f => `<li>${f}</li>`).join('')}</ul>
+                    `;
+                } else {
+                    showStatus('Error listing files: ' + result.message, true);
+                }
+            } catch (error) {
+                showStatus('Error listing files: ' + error, true);
+            }
+        }
+
+        // List files when page loads
+        listFiles();
+    </script>
+</body>
+</html>
+    
