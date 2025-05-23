@@ -136,9 +136,9 @@ def generate_ligand_embeddings(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate ligand embeddings from SMILES strings')
-    parser.add_argument('--input-csv-path', type=str, default="/data/ligands.csv",
+    parser.add_argument('--input-csv-path', type=str, required=True,
                         help='Path to input CSV file containing SMILES strings')
-    parser.add_argument('--output-path', type=str, default="/outputs/ligand_embeddings.npy",
+    parser.add_argument('--output-path', type=str, required=True,
                         help='Path to save the embeddings')
     parser.add_argument('--smiles-column', type=str, default="SMILES",
                         help='Name of the column containing SMILES strings')
