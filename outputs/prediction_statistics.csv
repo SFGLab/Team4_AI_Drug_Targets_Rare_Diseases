@@ -1,0 +1,9 @@
+statistic,value
+Total Samples,3000
+Valid Samples,3000
+Positive Predictions,1985
+Negative Predictions,1015
+True Positives,1901
+True Negatives,986
+False Positives,84
+False Negatives,29
